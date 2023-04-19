@@ -13,8 +13,8 @@ jobs:
         id: getinfo
         uses: ./
         with:
-          owner-name: "Microsoft"
-          repository-name: "Typescript"
+          owner-name: "actions"
+          repository-name: "checkout"
           from-date: "04/01/2023"
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
