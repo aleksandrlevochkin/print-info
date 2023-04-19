@@ -2,10 +2,17 @@ import * as core from '@actions/core';
 import { GitHub, getOctokitOptions } from '@actions/github/lib/utils';
 import { throttling } from '@octokit/plugin-throttling';
 
+interface UserInput {
+    ownerName: string;
+    repositoryName: string;
+    fromDate: string;
+}
+
 const runAction = async () => {
     try {
         const ownerName = core.getInput('owner-name');
         const repositoryName = core.getInput('repository-name');
+        const fromDate = core.getInput('from-date');;
         
         const authToken = core.getInput('github-token');
         const Octokit = GitHub.plugin(throttling);
@@ -20,14 +27,18 @@ const runAction = async () => {
         console.log(JSON.stringify(rateLimitInfo.data.resources.core));
         console.log();
         
-        await setOutputs(customOctokit, ownerName, repositoryName);
+        await setOutputs(customOctokit, {
+            ownerName, repositoryName, fromDate
+        });
        
       } catch (error) {
             core.setFailed(error instanceof Error ? error.message : "Exception occurred");
       }
 }
 
-const setOutputs = async (octokitClient: InstanceType<typeof GitHub>, ownerName: string, repositoryName: string): Promise<void> => {
+const setOutputs = async (octokitClient: InstanceType<typeof GitHub>, input: UserInput): Promise<void> => {
+    const { ownerName, repositoryName, fromDate } = input;
+
     const issuesAndPulls = await octokitClient.paginate(octokitClient.rest.issues.listForRepo, {
         owner: ownerName,
         repo: repositoryName,
@@ -61,7 +72,10 @@ const setOutputs = async (octokitClient: InstanceType<typeof GitHub>, ownerName:
     console.log(`Closed PRs: ${closedPulls.length}`);
     core.setOutput("closed-pulls", closedPulls.length);
 
-    openPulls.forEach(pull => console.log(pull.created_at));
+    const fromDateISO = new Date(fromDate).toISOString();
+    console.log(fromDateISO);
+    const test = openPulls.filter(pull => new Date(pull.created_at) > new Date(fromDateISO));
+    console.log(test.length);
 }
 
 runAction();

@@ -11380,6 +11380,8 @@ const runAction = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const ownerName = core.getInput('owner-name');
         const repositoryName = core.getInput('repository-name');
+        const fromDate = core.getInput('from-date');
+        ;
         const authToken = core.getInput('github-token');
         const Octokit = utils_1.GitHub.plugin(plugin_throttling_1.throttling);
         const customOctokit = new Octokit((0, utils_1.getOctokitOptions)(authToken, {
@@ -11391,13 +11393,16 @@ const runAction = () => __awaiter(void 0, void 0, void 0, function* () {
         const rateLimitInfo = yield customOctokit.rest.rateLimit.get();
         console.log(JSON.stringify(rateLimitInfo.data.resources.core));
         console.log();
-        yield setOutputs(customOctokit, ownerName, repositoryName);
+        yield setOutputs(customOctokit, {
+            ownerName, repositoryName, fromDate
+        });
     }
     catch (error) {
         core.setFailed(error instanceof Error ? error.message : "Exception occurred");
     }
 });
-const setOutputs = (octokitClient, ownerName, repositoryName) => __awaiter(void 0, void 0, void 0, function* () {
+const setOutputs = (octokitClient, input) => __awaiter(void 0, void 0, void 0, function* () {
+    const { ownerName, repositoryName, fromDate } = input;
     const issuesAndPulls = yield octokitClient.paginate(octokitClient.rest.issues.listForRepo, {
         owner: ownerName,
         repo: repositoryName,
@@ -11423,7 +11428,10 @@ const setOutputs = (octokitClient, ownerName, repositoryName) => __awaiter(void 
     const closedPulls = pulls.filter(pull => pull.state === "closed");
     console.log(`Closed PRs: ${closedPulls.length}`);
     core.setOutput("closed-pulls", closedPulls.length);
-    openPulls.forEach(pull => console.log(pull.created_at));
+    const fromDateISO = new Date(fromDate).toISOString();
+    console.log(fromDateISO);
+    const test = openPulls.filter(pull => new Date(pull.created_at) > new Date(fromDateISO));
+    console.log(test.length);
 });
 runAction();
 
