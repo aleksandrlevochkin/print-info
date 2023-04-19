@@ -1,17 +1,26 @@
 import * as core from '@actions/core';
-import * as github from '@actions/github';
-import { GitHub } from '@actions/github/lib/utils';
-import { log } from 'console';
+import { GitHub, getOctokitOptions } from '@actions/github/lib/utils';
+import { throttling } from '@octokit/plugin-throttling';
 
-const getRepositoryData = async () => {
+const runAction = async () => {
     try {
         const ownerName = core.getInput('owner-name');
         const repositoryName = core.getInput('repository-name');
         
         const authToken = core.getInput('github-token');
-        const octokit = github.getOctokit(authToken);
+        const Octokit = GitHub.plugin(throttling);
+        const customOctokit = new Octokit(getOctokitOptions(authToken, {
+            throttle: {
+                onRateLimit: () => console.warn("Rate limit is reached"),
+                onSecondaryRateLimit: () => console.warn("Secondary rate limit is reached"),
+            }
+        }));
+
+        const rateLimitInfo = await customOctokit.rest.rateLimit.get();
+        console.log(JSON.stringify(rateLimitInfo.data.resources.core));
+        console.log();
         
-        await setOutputs(octokit, ownerName, repositoryName);
+        await setOutputs(customOctokit, ownerName, repositoryName);
        
       } catch (error) {
             core.setFailed(error instanceof Error ? error.message : "Exception occurred");
@@ -51,6 +60,8 @@ const setOutputs = async (octokitClient: InstanceType<typeof GitHub>, ownerName:
     const closedPulls = pulls.filter(pull => pull.state === "closed");
     console.log(`Closed PRs: ${closedPulls.length}`);
     core.setOutput("closed-pulls", closedPulls.length);
+
+    openPulls.forEach(pull => console.log(pull.created_at));
 }
 
-getRepositoryData();
+runAction();
