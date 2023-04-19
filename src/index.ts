@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { GitHub } from '@actions/github/lib/utils';
+import { log } from 'console';
 
 const getRepositoryData = async () => {
     try {
@@ -37,7 +38,9 @@ const setOutputs = async (octokitClient: InstanceType<typeof GitHub>, ownerName:
     console.log(`Closed issues: ${closedIssues.length}`);
     core.setOutput("closed-issues", closedIssues.length);
 
-    const pulls = issues.filter(issue => issue.pull_request !== undefined);
+    console.log();
+
+    const pulls = issuesAndPulls.filter(issue => issue.pull_request !== undefined);
     console.log(`Total PRs: ${pulls.length}`);
     core.setOutput("total-pulls", pulls.length);
 

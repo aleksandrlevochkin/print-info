@@ -9680,7 +9680,8 @@ const setOutputs = (octokitClient, ownerName, repositoryName) => __awaiter(void 
     const closedIssues = issues.filter(issue => issue.state === "closed");
     console.log(`Closed issues: ${closedIssues.length}`);
     core.setOutput("closed-issues", closedIssues.length);
-    const pulls = issues.filter(issue => issue.pull_request !== undefined);
+    console.log();
+    const pulls = issuesAndPulls.filter(issue => issue.pull_request !== undefined);
     console.log(`Total PRs: ${pulls.length}`);
     core.setOutput("total-pulls", pulls.length);
     const openPulls = pulls.filter(pull => pull.state === "open");
