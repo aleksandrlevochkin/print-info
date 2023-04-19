@@ -5,8 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "package": "ncc build src/index.ts --license licenses.txt",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "package": "ncc build src/index.ts --license licenses.txt"
   },
   "keywords": [],
   "author": "",
