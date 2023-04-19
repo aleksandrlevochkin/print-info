@@ -9666,34 +9666,36 @@ const getRepositoryData = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 const setOutputForPulls = (octokitClient, ownerName, repositoryName) => __awaiter(void 0, void 0, void 0, function* () {
-    const pulls = yield octokitClient.paginate("GET /repos/{owner}/{repo}/pulls", {
+    octokitClient.paginate("GET /repos/{owner}/{repo}/pulls", {
         owner: ownerName,
         repo: repositoryName,
         state: "all",
-    }, (response) => response.data);
-    console.log(`Total PRs: ${pulls.length}`);
-    core.setOutput("total-pulls", pulls.length);
-    const openPulls = pulls.filter(pull => pull.state === "open");
-    console.log(`Open PRs: ${openPulls.length}`);
-    core.setOutput("open-pulls", openPulls.length);
-    const closedPulls = pulls.filter(pull => pull.state === "closed");
-    console.log(`Closed PRs: ${closedPulls.length}`);
-    core.setOutput("closed-pulls", closedPulls.length);
+    }).then(pulls => {
+        console.log(`Total PRs: ${pulls.length}`);
+        core.setOutput("total-pulls", pulls.length);
+        const openPulls = pulls.filter(pull => pull.state === "open");
+        console.log(`Open PRs: ${openPulls.length}`);
+        core.setOutput("open-pulls", openPulls.length);
+        const closedPulls = pulls.filter(pull => pull.state === "closed");
+        console.log(`Closed PRs: ${closedPulls.length}`);
+        core.setOutput("closed-pulls", closedPulls.length);
+    });
 });
 const setOutputForIssues = (octokitClient, ownerName, repositoryName) => __awaiter(void 0, void 0, void 0, function* () {
-    const issues = yield octokitClient.paginate("GET /repos/{owner}/{repo}/issues", {
+    octokitClient.paginate(octokitClient.rest.issues.listForRepo, {
         owner: ownerName,
         repo: repositoryName,
         state: "all",
-    }, (response) => response.data);
-    console.log(`Total issues: ${issues.length}`);
-    core.setOutput("total-issues", issues.length);
-    const openIssues = issues.filter(issue => issue.state === "open");
-    console.log(`Open issues: ${openIssues.length}`);
-    core.setOutput("open-issues", openIssues.length);
-    const closedIssues = issues.filter(issue => issue.state === "closed");
-    console.log(`Closed issues: ${closedIssues.length}`);
-    core.setOutput("closed-issues", closedIssues.length);
+    }).then(issues => {
+        console.log(`Total issues: ${issues.length}`);
+        core.setOutput("total-issues", issues.length);
+        const openIssues = issues.filter(issue => issue.state === "open");
+        console.log(`Open issues: ${openIssues.length}`);
+        core.setOutput("open-issues", openIssues.length);
+        const closedIssues = issues.filter(issue => issue.state === "closed");
+        console.log(`Closed issues: ${closedIssues.length}`);
+        core.setOutput("closed-issues", closedIssues.length);
+    });
 });
 getRepositoryData();
 
