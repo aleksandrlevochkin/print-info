@@ -1,0 +1,32 @@
+name: "Print Info"
+description: "Print information about the repository"
+inputs:
+  owner-name:
+    description: "Name of the owner of the Github repository"
+    required: true
+  repository-name:
+    description: "Name of the Github repository"
+    required: true
+  from-date:
+    description: "Date in the mm/dd/yy format from which the number of pull requests and issues will be calculated"
+    required: true
+  github-token:
+    description: "Auth token for access to Github API"
+    required: true
+outputs:
+  total-pulls:
+    description: "Total number of pull requests in the repository"
+  total-issues:
+    description: "Total number of issues in the repository"
+  open-pulls:
+    description: "Number of open pull requests in the repository"
+  open-issues:
+    description: "Number of open issues in the repository"
+  closed-pulls:
+    description: "Number of closed pull requests in the repository"
+  closed-issues:
+    description: "Number of closed issues in the repository"
+  
+runs:
+  using: "node16"
+  main: "dist/index.js"
