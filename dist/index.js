@@ -9658,38 +9658,20 @@ const getRepositoryData = () => __awaiter(void 0, void 0, void 0, function* () {
         const repositoryName = core.getInput('repository-name');
         const authToken = core.getInput('github-token');
         const octokit = github.getOctokit(authToken);
-        yield setOutputForPulls(octokit, ownerName, repositoryName);
-        yield setOutputForIssues(octokit, ownerName, repositoryName);
+        yield setOutputs(octokit, ownerName, repositoryName);
     }
     catch (error) {
         core.setFailed(error instanceof Error ? error.message : "Exception occurred");
     }
 });
-const setOutputForPulls = (octokitClient, ownerName, repositoryName) => __awaiter(void 0, void 0, void 0, function* () {
-    const pulls = yield octokitClient.paginate(octokitClient.rest.issues.listForRepo, {
+const setOutputs = (octokitClient, ownerName, repositoryName) => __awaiter(void 0, void 0, void 0, function* () {
+    const issuesAndPulls = yield octokitClient.paginate(octokitClient.rest.issues.listForRepo, {
         owner: ownerName,
         repo: repositoryName,
         state: "all",
         per_page: 100,
     });
-    console.log(`Total PRs: ${pulls.length}`);
-    core.setOutput("total-pulls", pulls.length);
-    const openPulls = pulls.filter(pull => pull.state === "open");
-    console.log(`Open PRs: ${openPulls.length}`);
-    core.setOutput("open-pulls", openPulls.length);
-    const closedPulls = pulls.filter(pull => pull.state === "closed");
-    console.log(`Closed PRs: ${closedPulls.length}`);
-    core.setOutput("closed-pulls", closedPulls.length);
-});
-const setOutputForIssues = (octokitClient, ownerName, repositoryName) => __awaiter(void 0, void 0, void 0, function* () {
-    const issues = yield octokitClient.paginate(octokitClient.rest.issues.listForRepo, {
-        owner: ownerName,
-        repo: repositoryName,
-        state: "all",
-        per_page: 100,
-    });
-    const pulls = issues.filter(issue => issue.pull_request !== undefined);
-    console.log(`Total pull requests as filtered from issues: ${pulls.length}`);
+    const issues = issuesAndPulls.filter(issue => issue.pull_request === undefined);
     console.log(`Total issues: ${issues.length}`);
     core.setOutput("total-issues", issues.length);
     const openIssues = issues.filter(issue => issue.state === "open");
@@ -9698,6 +9680,15 @@ const setOutputForIssues = (octokitClient, ownerName, repositoryName) => __await
     const closedIssues = issues.filter(issue => issue.state === "closed");
     console.log(`Closed issues: ${closedIssues.length}`);
     core.setOutput("closed-issues", closedIssues.length);
+    const pulls = issues.filter(issue => issue.pull_request !== undefined);
+    console.log(`Total PRs: ${pulls.length}`);
+    core.setOutput("total-pulls", pulls.length);
+    const openPulls = pulls.filter(pull => pull.state === "open");
+    console.log(`Open PRs: ${openPulls.length}`);
+    core.setOutput("open-pulls", openPulls.length);
+    const closedPulls = pulls.filter(pull => pull.state === "closed");
+    console.log(`Closed PRs: ${closedPulls.length}`);
+    core.setOutput("closed-pulls", closedPulls.length);
 });
 getRepositoryData();
 
