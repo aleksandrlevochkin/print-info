@@ -28,12 +28,12 @@ const getRepositoryData = async () => {
         core.setOutput("closed-pulls", closedPulls.length);
 
         // Issues
-        const issues = await octokit.rest.issues.list({
+        const issues = await octokit.rest.issues.listForRepo({
             owner: "microsoft",
             repo: "typescript",
             state: "all",
         });
-        console.log(`Total issues: ${issues.data.length}`);
+        console.log(`Total issues: ${issues.data}`);
         core.setOutput("total-issues", issues.data.length);
 
         const openIssues = issues.data.filter(issue => issue.state === "open");

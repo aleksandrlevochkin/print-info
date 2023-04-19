@@ -9673,12 +9673,12 @@ const getRepositoryData = () => __awaiter(void 0, void 0, void 0, function* () {
         console.log(`Closed PRs: ${closedPulls.length}`);
         core.setOutput("closed-pulls", closedPulls.length);
         // Issues
-        const issues = yield octokit.rest.issues.list({
+        const issues = yield octokit.rest.issues.listForRepo({
             owner: "microsoft",
             repo: "typescript",
             state: "all",
         });
-        console.log(`Total issues: ${issues.data.length}`);
+        console.log(`Total issues: ${issues.data}`);
         core.setOutput("total-issues", issues.data.length);
         const openIssues = issues.data.filter(issue => issue.state === "open");
         console.log(`Open issues: ${openIssues.length}`);
