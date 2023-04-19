@@ -9612,6 +9612,90 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 6144:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core = __importStar(__nccwpck_require__(2186));
+const github = __importStar(__nccwpck_require__(5438));
+const getRepositoryData = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const repositoryName = core.getInput('repository-name');
+        console.log(repositoryName);
+        const authToken = core.getInput('github-token');
+        const octokit = github.getOctokit(authToken);
+        // Pulls
+        const pulls = yield octokit.rest.pulls.list({
+            owner: "microsoft",
+            repo: "typescript",
+            state: "all",
+        });
+        console.log(`Total PRs: ${pulls.data.length}`);
+        core.setOutput("total-pulls", pulls.data.length);
+        const openPulls = pulls.data.filter(pull => pull.state === "open");
+        console.log(`Open PRs: ${openPulls.length}`);
+        core.setOutput("open-pulls", openPulls.length);
+        const closedPulls = pulls.data.filter(pull => pull.state === "closed");
+        console.log(`Closed PRs: ${closedPulls.length}`);
+        core.setOutput("closed-pulls", closedPulls.length);
+        // Issues
+        const issues = yield octokit.rest.issues.list({
+            owner: "microsoft",
+            repo: "typescript",
+            state: "all",
+        });
+        console.log(`Total issues: ${issues.data.length}`);
+        core.setOutput("total-issues", issues.data.length);
+        const openIssues = issues.data.filter(issue => issue.state === "open");
+        console.log(`Open issues: ${openIssues.length}`);
+        core.setOutput("open-issues", openIssues.length);
+        const closedIssues = issues.data.filter(issue => issue.state === "closed");
+        console.log(`Closed issues: ${closedIssues.length}`);
+        core.setOutput("closed-issues", closedIssues.length);
+    }
+    catch (error) {
+        core.setFailed(error instanceof Error ? error.message : "Exception occurred");
+    }
+});
+getRepositoryData();
+
+
+/***/ }),
+
 /***/ 2877:
 /***/ ((module) => {
 
@@ -9781,114 +9865,17 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nccwpck_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__nccwpck_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__nccwpck_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
-(() => {
-"use strict";
-__nccwpck_require__.r(__webpack_exports__);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5438);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_1__);
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-
-
-const getRepositoryData = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const repositoryName = _actions_core__WEBPACK_IMPORTED_MODULE_0___default().getInput('repository-name');
-        console.log(repositoryName);
-        const authToken = _actions_core__WEBPACK_IMPORTED_MODULE_0___default().getInput('github-token');
-        const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1___default().getOctokit(authToken);
-        // Pulls
-        const pulls = yield octokit.rest.pulls.list({
-            owner: "microsoft",
-            repo: "typescript",
-            state: "all",
-        });
-        console.log(`Total PRs: ${pulls.data.length}`);
-        _actions_core__WEBPACK_IMPORTED_MODULE_0___default().setOutput("total-pulls", pulls.data.length);
-        const openPulls = pulls.data.filter(pull => pull.state === "open");
-        console.log(`Open PRs: ${openPulls.length}`);
-        _actions_core__WEBPACK_IMPORTED_MODULE_0___default().setOutput("open-pulls", openPulls.length);
-        const closedPulls = pulls.data.filter(pull => pull.state === "closed");
-        console.log(`Closed PRs: ${closedPulls.length}`);
-        _actions_core__WEBPACK_IMPORTED_MODULE_0___default().setOutput("closed-pulls", closedPulls.length);
-        // Issues
-        const issues = yield octokit.rest.issues.list({
-            owner: "microsoft",
-            repo: "typescript",
-            state: "all",
-        });
-        console.log(`Total issues: ${issues.data.length}`);
-        _actions_core__WEBPACK_IMPORTED_MODULE_0___default().setOutput("total-issues", issues.data.length);
-        const openIssues = issues.data.filter(issue => issue.state === "open");
-        console.log(`Open issues: ${openIssues.length}`);
-        _actions_core__WEBPACK_IMPORTED_MODULE_0___default().setOutput("open-issues", openIssues.length);
-        const closedIssues = issues.data.filter(issue => issue.state === "closed");
-        console.log(`Closed issues: ${closedIssues.length}`);
-        _actions_core__WEBPACK_IMPORTED_MODULE_0___default().setOutput("closed-issues", closedIssues.length);
-    }
-    catch (error) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_0___default().setFailed(error instanceof Error ? error.message : "Exception occurred");
-    }
-});
-getRepositoryData();
-
-})();
-
-module.exports = __webpack_exports__;
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __nccwpck_require__(6144);
+/******/ 	module.exports = __webpack_exports__;
+/******/ 	
 /******/ })()
 ;
