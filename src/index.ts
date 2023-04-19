@@ -23,7 +23,8 @@ const setOutputForPulls = async (octokitClient: InstanceType<typeof GitHub>, own
         owner: ownerName,
         repo: repositoryName,
         state: "all",
-    });
+    }, (response) => response.data);
+
     console.log(`Total PRs: ${pulls.length}`);
     core.setOutput("total-pulls", pulls.length);
     
@@ -41,7 +42,8 @@ const setOutputForIssues = async (octokitClient: InstanceType<typeof GitHub>, ow
         owner: ownerName,
         repo: repositoryName,
         state: "all",
-    });
+    }, (response) => response.data);
+    
     console.log(`Total issues: ${issues.length}`);
     core.setOutput("total-issues", issues.length);
 

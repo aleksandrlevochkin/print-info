@@ -9670,7 +9670,7 @@ const setOutputForPulls = (octokitClient, ownerName, repositoryName) => __awaite
         owner: ownerName,
         repo: repositoryName,
         state: "all",
-    });
+    }, (response) => response.data);
     console.log(`Total PRs: ${pulls.length}`);
     core.setOutput("total-pulls", pulls.length);
     const openPulls = pulls.filter(pull => pull.state === "open");
@@ -9685,7 +9685,7 @@ const setOutputForIssues = (octokitClient, ownerName, repositoryName) => __await
         owner: ownerName,
         repo: repositoryName,
         state: "all",
-    });
+    }, (response) => response.data);
     console.log(`Total issues: ${issues.length}`);
     core.setOutput("total-issues", issues.length);
     const openIssues = issues.filter(issue => issue.state === "open");
