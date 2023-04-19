@@ -21,10 +21,9 @@ jobs:
       - name: Print info
         run: |
           echo "Total number of pull requests is ${{ steps.getinfo.outputs.total-pulls }}"
-          echo "Total number of issues is ${{ steps.getinfo.outputs.total-issues }}"
-          
           echo "Number of open pull requests is ${{ steps.getinfo.outputs.open-pulls }}"
-          echo "Number of open issues is ${{ steps.getinfo.outputs.open-issues }}"
-          
           echo "Number of closed pull requests is ${{ steps.getinfo.outputs.closed-pulls }}"
+
+          echo "Total number of issues is ${{ steps.getinfo.outputs.total-issues }}"
+          echo "Number of open issues is ${{ steps.getinfo.outputs.open-issues }}"
           echo "Number of closed issues is ${{ steps.getinfo.outputs.closed-issues }}"

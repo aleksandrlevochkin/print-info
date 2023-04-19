@@ -19,37 +19,37 @@ const getRepositoryData = async () => {
 }
 
 const setOutputForPulls = async (octokitClient: InstanceType<typeof GitHub>, ownerName: string, repositoryName: string): Promise<void> => {
-    const pulls = await octokitClient.rest.pulls.list({
+    const pulls = await octokitClient.paginate("GET /repos/{owner}/{repo}/pulls", {
         owner: ownerName,
         repo: repositoryName,
         state: "all",
     });
-    console.log(`Total PRs: ${pulls.data.length}`);
-    core.setOutput("total-pulls", pulls.data.length);
+    console.log(`Total PRs: ${pulls.length}`);
+    core.setOutput("total-pulls", pulls.length);
     
-    const openPulls = pulls.data.filter(pull => pull.state === "open");
+    const openPulls = pulls.filter(pull => pull.state === "open");
     console.log(`Open PRs: ${openPulls.length}`);
     core.setOutput("open-pulls", openPulls.length);
 
-    const closedPulls = pulls.data.filter(pull => pull.state === "closed");
+    const closedPulls = pulls.filter(pull => pull.state === "closed");
     console.log(`Closed PRs: ${closedPulls.length}`);
     core.setOutput("closed-pulls", closedPulls.length);
 }
 
 const setOutputForIssues = async (octokitClient: InstanceType<typeof GitHub>, ownerName: string, repositoryName: string): Promise<void> => {
-    const issues = await octokitClient.rest.issues.listForRepo({
+    const issues = await octokitClient.paginate("GET /repos/{owner}/{repo}/issues", {
         owner: ownerName,
         repo: repositoryName,
         state: "all",
     });
-    console.log(`Total issues: ${issues.data.length}`);
-    core.setOutput("total-issues", issues.data.length);
+    console.log(`Total issues: ${issues.length}`);
+    core.setOutput("total-issues", issues.length);
 
-    const openIssues = issues.data.filter(issue => issue.state === "open");
+    const openIssues = issues.filter(issue => issue.state === "open");
     console.log(`Open issues: ${openIssues.length}`);
     core.setOutput("open-issues", openIssues.length);
 
-    const closedIssues = issues.data.filter(issue => issue.state === "closed");
+    const closedIssues = issues.filter(issue => issue.state === "closed");
     console.log(`Closed issues: ${closedIssues.length}`);
     core.setOutput("closed-issues", closedIssues.length);
 }
