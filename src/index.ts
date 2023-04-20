@@ -8,13 +8,13 @@ interface UserInput {
     fromDate: string;
 }
 
-const runAction = async () => {
+const runAction = async (): Promise<void> => {
     try {
         const ownerName = core.getInput('owner-name');
         const repositoryName = core.getInput('repository-name');
-        const fromDate = core.getInput('from-date');;
-        
+        const fromDate = core.getInput('from-date');
         const authToken = core.getInput('github-token');
+
         const Octokit = GitHub.plugin(throttling);
         const customOctokit = new Octokit(getOctokitOptions(authToken, {
             throttle: {
@@ -24,7 +24,8 @@ const runAction = async () => {
         }));
 
         const rateLimitInfo = await customOctokit.rest.rateLimit.get();
-        console.log(JSON.stringify(rateLimitInfo.data.resources.core));
+        const { limit, used, remaining } = rateLimitInfo.data.resources.core;
+        console.log(`${used} requests were used, ${remaining} requests remain. The limit is ${limit}`);
         console.log();
         
         await setOutputs(customOctokit, {
@@ -38,6 +39,9 @@ const runAction = async () => {
 
 const setOutputs = async (octokitClient: InstanceType<typeof GitHub>, input: UserInput): Promise<void> => {
     const { ownerName, repositoryName, fromDate } = input;
+
+    const fromDateISO = new Date(fromDate).toISOString();
+    const fromDateISOForComparison = new Date(fromDateISO);
 
     const issuesAndPulls = await octokitClient.paginate(octokitClient.rest.issues.listForRepo, {
         owner: ownerName,
@@ -58,6 +62,10 @@ const setOutputs = async (octokitClient: InstanceType<typeof GitHub>, input: Use
     console.log(`Closed issues: ${closedIssues.length}`);
     core.setOutput("closed-issues", closedIssues.length);
 
+    const issuesOpenedSinceGivenDate = issues.filter(pull => new Date(pull.created_at) > fromDateISOForComparison);
+    console.log(`Issues opened since ${fromDate}: ${issuesOpenedSinceGivenDate.length}`);
+    core.setOutput("issues-since-date", issuesOpenedSinceGivenDate.length);
+
     console.log();
 
     const pulls = issuesAndPulls.filter(issue => issue.pull_request !== undefined);
@@ -72,10 +80,9 @@ const setOutputs = async (octokitClient: InstanceType<typeof GitHub>, input: Use
     console.log(`Closed PRs: ${closedPulls.length}`);
     core.setOutput("closed-pulls", closedPulls.length);
 
-    const fromDateISO = new Date(fromDate).toISOString();
-    console.log(fromDateISO);
-    const test = openPulls.filter(pull => new Date(pull.created_at) > new Date(fromDateISO));
-    console.log(test.length);
+    const pullsOpenedSinceGivenDate = pulls.filter(pull => new Date(pull.created_at) > fromDateISOForComparison);
+    console.log(`PRs opened since ${fromDate}: ${pullsOpenedSinceGivenDate.length}`);
+    core.setOutput("pulls-since-date", pullsOpenedSinceGivenDate.length);
 }
 
 runAction();

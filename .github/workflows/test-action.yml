@@ -1,9 +1,9 @@
 on: [push]
 
 jobs:
-  print-info-about-ts:
+  print-info-job:
     runs-on: ubuntu-latest
-    name: Print information about Typescript repository
+    name: Print information about a repository
     
     steps:
       - name: Checkout the repo
@@ -11,11 +11,11 @@ jobs:
 
       - name: Get info
         id: getinfo
-        uses: ./
+        uses: aleksandrlevochkin/print-info@v1.0
         with:
           owner-name: "actions"
           repository-name: "checkout"
-          from-date: "04/01/2023"
+          from-date: "03-20-2023"
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Print info
@@ -23,7 +23,9 @@ jobs:
           echo "Total number of issues is ${{ steps.getinfo.outputs.total-issues }}"
           echo "Number of open issues is ${{ steps.getinfo.outputs.open-issues }}"
           echo "Number of closed issues is ${{ steps.getinfo.outputs.closed-issues }}"
+          echo "Number of issues opened since ${{ steps.getinfo.inputs.from-date }} is ${{ steps.getinfo.outputs.issues-since-date }}"
 
           echo "Total number of pull requests is ${{ steps.getinfo.outputs.total-pulls }}"
           echo "Number of open pull requests is ${{ steps.getinfo.outputs.open-pulls }}"
           echo "Number of closed pull requests is ${{ steps.getinfo.outputs.closed-pulls }}"
+          echo "Number of pull requests opened since ${{ steps.getinfo.inputs.from-date }} is ${{ steps.getinfo.outputs.pulls-since-date }}"

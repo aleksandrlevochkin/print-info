@@ -1,5 +1,5 @@
 name: "Print Info"
-description: "Print information about the repository"
+description: "Print information about a repository"
 inputs:
   owner-name:
     description: "Name of the owner of the Github repository"
@@ -14,18 +14,22 @@ inputs:
     description: "Auth token for access to Github API"
     required: true
 outputs:
-  total-pulls:
-    description: "Total number of pull requests in the repository"
   total-issues:
     description: "Total number of issues in the repository"
-  open-pulls:
-    description: "Number of open pull requests in the repository"
   open-issues:
     description: "Number of open issues in the repository"
-  closed-pulls:
-    description: "Number of closed pull requests in the repository"
   closed-issues:
     description: "Number of closed issues in the repository"
+  issues-since-date:
+    description: "Number of issues opened since given date"
+  total-pulls:
+    description: "Total number of pull requests in the repository"
+  open-pulls:
+    description: "Number of open pull requests in the repository"
+  closed-pulls:
+    description: "Number of closed pull requests in the repository"
+  pulls-since-date:
+      description: "Number of pull requests opened since given date"
   
 runs:
   using: "node16"
