@@ -11,7 +11,7 @@ jobs:
 
       - name: Get info
         id: getinfo
-        uses: aleksandrlevochkin/print-info@v1.2.0
+        uses: aleksandrlevochkin/print-info@v1.3.0
         with:
           owner-name: "actions"
           repository-name: "checkout"

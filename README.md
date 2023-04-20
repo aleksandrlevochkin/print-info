@@ -61,7 +61,7 @@ The same `from-date` that is passed to the action's input. Needed to display the
 ## Example usage
 
 ```yaml
-uses: aleksandrlevochkin/print-info@v1.2.0
+uses: aleksandrlevochkin/print-info@v1.3.0
 with:
   owner-name: "actions"
   repository-name: "checkout"
