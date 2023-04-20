@@ -57,7 +57,7 @@ Number of pull requests opened since given date
 ## Example usage
 
 ```yaml
-uses: aleksandrlevochkin/print-info@v1.0
+uses: aleksandrlevochkin/print-info@v1.1.0
 with:
   owner-name: "actions"
   repository-name: "checkout"
