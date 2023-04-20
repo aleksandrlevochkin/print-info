@@ -11381,7 +11381,6 @@ const runAction = () => __awaiter(void 0, void 0, void 0, function* () {
         const ownerName = core.getInput('owner-name');
         const repositoryName = core.getInput('repository-name');
         const fromDate = core.getInput('from-date');
-        ;
         const authToken = core.getInput('github-token');
         const Octokit = utils_1.GitHub.plugin(plugin_throttling_1.throttling);
         const customOctokit = new Octokit((0, utils_1.getOctokitOptions)(authToken, {
@@ -11391,7 +11390,8 @@ const runAction = () => __awaiter(void 0, void 0, void 0, function* () {
             }
         }));
         const rateLimitInfo = yield customOctokit.rest.rateLimit.get();
-        console.log(JSON.stringify(rateLimitInfo.data.resources.core));
+        const { limit, used, remaining } = rateLimitInfo.data.resources.core;
+        console.log(`${used} requests were used, ${remaining} requests remain. The limit is ${limit}`);
         console.log();
         yield setOutputs(customOctokit, {
             ownerName, repositoryName, fromDate
@@ -11403,6 +11403,8 @@ const runAction = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 const setOutputs = (octokitClient, input) => __awaiter(void 0, void 0, void 0, function* () {
     const { ownerName, repositoryName, fromDate } = input;
+    const fromDateISO = new Date(fromDate).toISOString();
+    const fromDateISOForComparison = new Date(fromDateISO);
     const issuesAndPulls = yield octokitClient.paginate(octokitClient.rest.issues.listForRepo, {
         owner: ownerName,
         repo: repositoryName,
@@ -11418,6 +11420,9 @@ const setOutputs = (octokitClient, input) => __awaiter(void 0, void 0, void 0, f
     const closedIssues = issues.filter(issue => issue.state === "closed");
     console.log(`Closed issues: ${closedIssues.length}`);
     core.setOutput("closed-issues", closedIssues.length);
+    const issuesOpenedSinceGivenDate = issues.filter(pull => new Date(pull.created_at) > fromDateISOForComparison);
+    console.log(`Issues opened since ${fromDate}: ${issuesOpenedSinceGivenDate.length}`);
+    core.setOutput("issues-since-date", issuesOpenedSinceGivenDate.length);
     console.log();
     const pulls = issuesAndPulls.filter(issue => issue.pull_request !== undefined);
     console.log(`Total PRs: ${pulls.length}`);
@@ -11428,10 +11433,9 @@ const setOutputs = (octokitClient, input) => __awaiter(void 0, void 0, void 0, f
     const closedPulls = pulls.filter(pull => pull.state === "closed");
     console.log(`Closed PRs: ${closedPulls.length}`);
     core.setOutput("closed-pulls", closedPulls.length);
-    const fromDateISO = new Date(fromDate).toISOString();
-    console.log(fromDateISO);
-    const test = openPulls.filter(pull => new Date(pull.created_at) > new Date(fromDateISO));
-    console.log(test.length);
+    const pullsOpenedSinceGivenDate = pulls.filter(pull => new Date(pull.created_at) > fromDateISOForComparison);
+    console.log(`PRs opened since ${fromDate}: ${pullsOpenedSinceGivenDate.length}`);
+    core.setOutput("pulls-since-date", pullsOpenedSinceGivenDate.length);
 });
 runAction();
 
