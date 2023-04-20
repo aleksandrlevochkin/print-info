@@ -83,6 +83,8 @@ const setOutputs = async (octokitClient: InstanceType<typeof GitHub>, input: Use
     const pullsOpenedSinceGivenDate = pulls.filter(pull => new Date(pull.created_at) > fromDateISOForComparison);
     console.log(`PRs opened since ${fromDate}: ${pullsOpenedSinceGivenDate.length}`);
     core.setOutput("pulls-since-date", pullsOpenedSinceGivenDate.length);
+
+    core.setOutput("from-date-input", fromDate);
 }
 
 runAction();

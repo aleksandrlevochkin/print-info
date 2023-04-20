@@ -29,8 +29,9 @@ outputs:
   closed-pulls:
     description: "Number of closed pull requests in the repository"
   pulls-since-date:
-      description: "Number of pull requests opened since given date"
-  
+    description: "Number of pull requests opened since given date"
+  from-date-input:
+    description: "The same 'from-date' that is passed to the action's input. Needed to display the results more nicely"
 runs:
   using: "node16"
   main: "dist/index.js"

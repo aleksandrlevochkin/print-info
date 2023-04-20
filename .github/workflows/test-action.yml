@@ -11,7 +11,7 @@ jobs:
 
       - name: Get info
         id: getinfo
-        uses: aleksandrlevochkin/print-info@v1.1.0
+        uses: aleksandrlevochkin/print-info@v1.2.0
         with:
           owner-name: "actions"
           repository-name: "checkout"
@@ -23,9 +23,9 @@ jobs:
           echo "Total number of issues is ${{ steps.getinfo.outputs.total-issues }}"
           echo "Number of open issues is ${{ steps.getinfo.outputs.open-issues }}"
           echo "Number of closed issues is ${{ steps.getinfo.outputs.closed-issues }}"
-          echo "Number of issues opened since ${{ steps.getinfo.inputs.from-date }} is ${{ steps.getinfo.outputs.issues-since-date }}"
+          echo "Number of issues opened since ${{ steps.getinfo.outputs.from-date-input }} is ${{ steps.getinfo.outputs.issues-since-date }}"
 
           echo "Total number of pull requests is ${{ steps.getinfo.outputs.total-pulls }}"
           echo "Number of open pull requests is ${{ steps.getinfo.outputs.open-pulls }}"
           echo "Number of closed pull requests is ${{ steps.getinfo.outputs.closed-pulls }}"
-          echo "Number of pull requests opened since ${{ steps.getinfo.inputs.from-date }} is ${{ steps.getinfo.outputs.pulls-since-date }}"
+          echo "Number of pull requests opened since ${{ steps.getinfo.outputs.from-date-input }} is ${{ steps.getinfo.outputs.pulls-since-date }}"
