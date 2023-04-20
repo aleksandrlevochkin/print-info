@@ -54,10 +54,14 @@ Number of closed pull requests in the repository
 
 Number of pull requests opened since given date
 
+### `from-date-input`
+
+The same `from-date` that is passed to the action's input. Needed to display the results more nicely
+
 ## Example usage
 
 ```yaml
-uses: aleksandrlevochkin/print-info@v1.1.0
+uses: aleksandrlevochkin/print-info@v1.3.0
 with:
   owner-name: "actions"
   repository-name: "checkout"

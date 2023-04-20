@@ -11436,6 +11436,7 @@ const setOutputs = (octokitClient, input) => __awaiter(void 0, void 0, void 0, f
     const pullsOpenedSinceGivenDate = pulls.filter(pull => new Date(pull.created_at) > fromDateISOForComparison);
     console.log(`PRs opened since ${fromDate}: ${pullsOpenedSinceGivenDate.length}`);
     core.setOutput("pulls-since-date", pullsOpenedSinceGivenDate.length);
+    core.setOutput("from-date-input", fromDate);
 });
 runAction();
 
